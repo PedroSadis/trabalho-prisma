@@ -1,0 +1,34 @@
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  author    Author?
+  favorites Favorite[]
+}
+
+model Author {
+  id       Int     @id @default(autoincrement())
+  bio      String?
+  userId   Int     @unique
+  user     User    @relation(fields: [userId], references: [id])
+  posts    Post[]
+}
+
+model Post {
+  id           Int        @id @default(autoincrement())
+  title        String
+  content      String
+  publishedAt  DateTime   @default(now())
+  authorId     Int
+  author       Author     @relation(fields: [authorId], references: [id])
+  favoritedBy  Favorite[]
+}
+
+model Favorite {
+  id      Int    @id @default(autoincrement())
+  userId  Int
+  postId  Int
+  user    User   @relation(fields: [userId], references: [id])
+  post    Post   @relation(fields: [postId], references: [id])
+  @@unique([userId, postId])
+}
