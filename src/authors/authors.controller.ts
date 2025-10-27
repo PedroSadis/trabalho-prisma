@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus } from '@nestjs/common'; // Adicione Put, HttpCode, HttpStatus
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
@@ -23,11 +23,21 @@ export class AuthorsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
+  updatePartial(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
     return this.authorsService.update(+id, updateAuthorDto);
   }
 
+  // PUT - Atualização completa
+   @Put(':id')
+   updateComplete(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
+     // Validação mais estrita pode ser necessária no DTO ou serviço para garantir que todos os campos obrigatórios sejam fornecidos para PUT
+     // Como exemplo, reutilizaremos a lógica do PATCH.
+     return this.authorsService.update(+id, updateAuthorDto);
+   }
+
+
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     return this.authorsService.remove(+id);
   }
